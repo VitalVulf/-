@@ -1,0 +1,621 @@
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include<locale>
+#include<sstream>
+#include<string>
+#include <vector>
+#include <algorithm>
+#include <random>
+#include <ctime>
+
+
+using namespace std;
+using namespace sf;
+
+void shuffle_two_arrays(std::vector<std::string>& arr1, std::vector<std::string>& arr2,std::vector<int>& heh) {
+    srand(time(0));
+    int h = 0 ;
+
+   for (int i = arr1.size() - 2; i >= 1; --i) {
+    int h = rand() % (i + 1); 
+    std::swap(arr1[i], arr1[h]);
+    std::swap(arr2[i], arr2[h]);
+    std::swap(heh[i], heh[h]);
+}
+}
+
+void klick(sf::RectangleShape& rectangle, Event& event,Text& texts,std::vector<std::string>& str,int i, int& randomIndex, std::vector<std::string>& str1,Text& otv,bool& dev,int& zighail,std::vector<int>& heh, bool& islam, bool& okno) {
+	if (rectangle.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y) )
+{ 	islam = true;
+        texts.setString(str[randomIndex]);
+        rectangle.setFillColor(Color::Green);
+if((i + 1) == heh[randomIndex]){
+dev = true;
+okno = true;
+cout << "ïðàâèëüíî"<< endl;
+}else{
+cout << "íå ïðàâèëüíî"<< endl;	
+}
+randomIndex++;
+zighail++;	
+//dev2 = true ;
+                    }else{
+rectangle.setFillColor(Color::White);
+					}
+					
+}
+
+void handleEvents(RenderWindow& window, View& view, float scrollSpeed, Event& event)
+{
+         if (event.type == Event::MouseWheelScrolled)
+        {
+            if (event.mouseWheelScroll.delta > 0)
+                view.move(0, -scrollSpeed);
+            else if (event.mouseWheelScroll.delta < 0)
+                view.move(0, scrollSpeed);
+        }
+    }
+
+
+void render(RenderWindow& window, View& view)
+{
+    window.setView(view);
+}
+
+void createSpriteOnClick(RenderWindow& window,Text& text, Sprite& sprite, Vector2f offset, View& view) {
+    if (Mouse::isButtonPressed(Mouse::Left)) {
+        Vector2f mousePos = Vector2f(Mouse::getPosition());
+//        sf::Vector2i globalPosition = sf::Mouse::getPosition();
+//
+//// Ïîëó÷èòü ïîçèöèþ îêíà èëè êàìåðû
+//sf::Vector2f windowPosition = window.mapPixelToCoords(globalPosition);
+//
+//// Ïîëó÷èòü ïîçèöèþ ìûøè îòíîñèòåëüíî ïåðâîíà÷àëüíîãî ðàñïîëîæåíèÿ ýêðàíà èëè êàìåðû
+
+sf::Vector2f relativePosition = Vector2f((mousePos.x), (mousePos.y + ((view.getCenter().y+(768/2))-768)));
+        if (text.getGlobalBounds().contains(relativePosition)) {
+        	
+            sprite.setPosition(text.getPosition() - offset);
+//            sprite.setPosition(sprite.getPosition() - view.getCenter());
+        }
+    }
+}
+
+
+int main(){
+	RenderWindow window(VideoMode(1024, 768),"Table",Style::Fullscreen);
+	window.setFramerateLimit(60);
+	setlocale(LC_ALL, "Russian");
+
+	View view(FloatRect(0, 0, 1024, 768));
+    window.setView(view);
+	bool penis[28];
+//////Ýêðàí òàáëèöû Ïåðâûé Øàã
+//	Texture akranTexture;
+//	akranTexture.loadFromFile("vkr.jpg");
+//    Sprite akran(akranTexture);
+	Texture tests;
+	tests.loadFromFile("images/x_Predmeny3.jpg");
+    Sprite testik(tests);
+    testik.setPosition(0,-20);
+    testik.setScale(0.515f,0.4f);
+    
+    Texture okna;
+	okna.loadFromFile("images/pov_ili_idi.jpg");
+    Sprite okn(okna);
+    okn.setPosition(240,240);
+    okn.setScale(0.6f,0.4f);
+    
+    RectangleShape akno(Vector2f((okn.getGlobalBounds().width * 0.6f)+215, (okn.getGlobalBounds().height * 0.6f)+175));
+    akno.setPosition(okn.getPosition());
+    akno.setOutlineThickness(5);
+    akno.setOutlineColor(Color::Black);
+    akno.setFillColor(Color(128, 128, 128));
+    
+    okn.move(0.f, 25.f);
+    
+    Texture knopkaV;
+	knopkaV.loadFromFile("knopka_pravo3.png");
+    Sprite knopV(knopkaV);
+    knopV.setPosition(660,430);
+    knopV.setScale(0.12f,0.12f);
+    
+    Texture knopkaP;
+	knopkaP.loadFromFile("knopka_povtora.png");
+    Sprite knopP(knopkaP);
+    knopP.setPosition(580,433);
+    knopP.setScale(0.10f,0.10f);
+    
+    RectangleShape krest(sf::Vector2f(20,20));
+    krest.setPosition(758,242);
+    krest.setFillColor(Color::White);
+    krest.setOutlineThickness(2.f);
+    krest.setOutlineColor(Color::Red);
+	Texture texture;
+    if (!texture.loadFromFile("krestik1.png")) {
+        return 1;
+    }
+	Sprite krestik(texture);
+    krestik.setScale(0.025f, 0.025f);
+    krestik.setPosition(krest.getPosition().x, krest.getPosition().y);
+
+	bool test = false, vhod = true, test1 = false, islam[10],okno = false;
+	int randomIndex = 0;
+	const int numRows = 2;
+    const int numCols = 9;
+    const int cellWidth = (1024 - 20) / numCols;
+    const int cellHeight = (170);
+    bool dev[10], dev2[10];
+ 	int zighail = 0;
+ 	for(int i = 0 ; i < 10 ; i++){
+ 	 dev[i]	= false;
+	 }
+    Font font;
+    font.loadFromFile("Oswald-VariableFont_wght.ttf");
+    
+    Texture cifr[10];
+
+	for(int i = 1 ; i <=9;i++){
+		stringstream ss;
+		string str;
+		ss << i;
+		ss >> str;
+	cifr[i].loadFromFile("cifri/"+ str + ".png");	
+	}
+    
+    Text otv("",font,13);
+    otv.setPosition(205,605);
+    otv.setFillColor(Color::Black);
+    
+	Text texts[10]; // Ñîçäàíèå ìàññèâà èç 5 òåêñòîâûõ îáúåêòîâ	
+
+    for (int i = 1; i <= 9; ++i) {
+        texts[i].setFont(font);
+        texts[i].setString("");
+        texts[i].setCharacterSize(12);
+        texts[i].setFillColor(sf::Color::Black);
+        texts[i].setPosition(i + 15 + ((i-1) * 110), 217); // Óñòàíîâêà ïîçèöèè êàæäîãî òåêñòà
+    }
+    
+    Text zagolovok("Óðîâåíü 3: Øàã 1.",font,30);
+    zagolovok.setPosition(30,20);
+    zagolovok.setFillColor(Color::Black);
+    
+    Text shag("Ïîâòîðèòü\n    Øàã 1",font,12);
+    shag.setPosition(705,20);
+    shag.setFillColor(Color::Black);
+    
+    Text shag1(" Ïåðåéòè\n   Øàã 2",font,12);
+    shag1.setPosition(775,20);
+    shag1.setFillColor(Color::Black);
+    
+    Text pimos(" Ïîìîùü ",font,12);
+    pimos.setPosition(845,30);
+    pimos.setFillColor(Color::Black);
+    
+    RectangleShape povtor;
+    povtor.setSize(Vector2f(60, 35));
+    povtor.setOutlineColor(Color::Black);
+    povtor.setOutlineThickness(2);
+    povtor.setPosition(700,20);
+    
+    RectangleShape otveti;
+    otveti.setSize(Vector2f(600, 100));
+    otveti.setOutlineColor(Color::Black);
+    otveti.setOutlineThickness(2);
+    otveti.setPosition(200,600);
+    
+    RectangleShape vpered;
+    vpered.setSize(Vector2f(60, 35));
+    vpered.setOutlineColor(Color::Black);
+    vpered.setOutlineThickness(2);
+    vpered.setPosition(770,20);
+    
+    RectangleShape pim;
+    pim.setSize(Vector2f(60, 35));
+    pim.setOutlineColor(Color::Black);
+    pim.setOutlineThickness(2);
+    pim.setPosition(840,20);
+	
+	RectangleShape rectangle;
+    rectangle.setSize(Vector2f(30, 30));
+    rectangle.setOutlineColor(Color::Black);
+    rectangle.setOutlineThickness(2);
+    rectangle.setPosition(900,600);
+    rectangle.setTexture(&cifr[1]);
+    
+    RectangleShape rectangle1;
+    rectangle1.setSize(Vector2f(30, 30));
+    rectangle1.setOutlineColor(Color::Black);
+    rectangle1.setOutlineThickness(2);
+    rectangle1.setPosition(900+40,600);
+    rectangle1.setTexture(&cifr[2]);
+    
+    RectangleShape rectangle2;
+    rectangle2.setSize(Vector2f(30, 30));
+    rectangle2.setOutlineColor(Color::Black);
+    rectangle2.setOutlineThickness(2);
+    rectangle2.setPosition(900+(40*2),600);
+    rectangle2.setTexture(&cifr[3]);
+    
+    RectangleShape rectangle3;
+    rectangle3.setSize(Vector2f(30, 30));
+    rectangle3.setOutlineColor(Color::Black);
+    rectangle3.setOutlineThickness(2);
+    rectangle3.setPosition(900,600+40);
+    rectangle3.setTexture(&cifr[4]);
+    
+    RectangleShape rectangle4;
+    rectangle4.setSize(Vector2f(30, 30));
+    rectangle4.setOutlineColor(Color::Black);
+    rectangle4.setOutlineThickness(2);
+    rectangle4.setPosition(900+40,600+40);
+    rectangle4.setTexture(&cifr[5]);
+    
+    RectangleShape rectangle5;
+    rectangle5.setSize(Vector2f(30, 30));
+    rectangle5.setOutlineColor(Color::Black);
+    rectangle5.setOutlineThickness(2);
+    rectangle5.setPosition(900+(40*2),600+40);
+    rectangle5.setTexture(&cifr[6]);
+    
+    RectangleShape rectangle6;
+    rectangle6.setSize(Vector2f(30, 30));
+    rectangle6.setOutlineColor(Color::Black);
+    rectangle6.setOutlineThickness(2);
+    rectangle6.setPosition(900,600+(40*2));
+    rectangle6.setTexture(&cifr[7]);
+    
+    RectangleShape rectangle7;
+    rectangle7.setSize(Vector2f(30, 30));
+    rectangle7.setOutlineColor(Color::Black);
+    rectangle7.setOutlineThickness(2);
+    rectangle7.setPosition(900+40,600+(40*2));
+    rectangle7.setTexture(&cifr[8]);
+    
+    RectangleShape rectangle8;
+    rectangle8.setSize(Vector2f(30, 30));
+    rectangle8.setOutlineColor(Color::Black);
+    rectangle8.setOutlineThickness(2);
+    rectangle8.setPosition(900+(40*2),600+(40*2));
+    rectangle8.setTexture(&cifr[9]);
+	
+    RectangleShape cells[numRows][numCols];
+    Text text[numRows][numCols];
+    std::vector<int> heh{
+	1,2,3,4,5,6,7,8,9,0
+	};
+	String str[10]{
+	"1. Ýòàï \nìîòèâàöèè \n(ñàìîîïðåäåëåíèÿ) \nê ó÷åáíîé \näåÿòåëüíîñòè.",
+	"2. Ýòàï \nàêòóàëèçàöèÿ è \nôèêñèðîâàíèå\nèíäèâèäóàëüíîãî \nçàòðóäíåíèÿ â \nïðîáíîì\näåéñòâèè.",
+	"3. Ýòàï \nâûÿâëåíèÿ ìåñòà \nè ïðè÷èíû \nçàòðóäíåíèÿ.",
+	"4. Ýòàï ïîñòðîåíèÿ \nïðîåêòà âûõîäà èç \nçàòðóäíåíèÿ.",
+	"5. Ýòàï ðåàëèçàöèè \nïîñòðîåííîãî\nïðîåêòà.",
+	"6. Ýòàï ïåðâè÷íîãî \nçàêðåïëåíèÿ ñ\nïðîãîâàðèâàíèåì\nâî âíåøíåé ðå÷è.",
+	"7. Ýòàï \nñàìîñòîÿòåëüíîé\nðàáîòû ñ ïðîâåðêîé\n ïî ýòàëîíó.",
+	"8. Ýòàï âêëþ÷åíèÿ â\nñèñòåìó çíàíèé\nè ïîâòîðåíèÿ.",
+	"9. Ýòàï ðåôëåêñèè \nó÷åáíîé \näåÿòåëüíîñòè \níà óðîêå."
+	};
+
+	std::vector<std::string> str1{"Âûðàáîòàòü íà ëè÷íîñòíî çíà÷èìîì óðîâíå âíóòðåííåé ãîòîâíîñòè âûïîëíåíèÿ íîðìàòèâíûõ òðåáîâàíèé \nó÷åáíîé äåÿòåëüíîñòè.",
+	"Ïîäãîòîâèòü ìûøëåíèå ó÷àùèõñÿ è îðãàíèçàöèÿ îñîçíàíèÿ èìè âíóòðåííåé ïîòðåáíîñòè ê ïîñòðîåíèþ ó÷åáíûõ \näåéñòâèé îðãàíèçîâàòü ôèêñèðîâàíèå êàæäûì èç íèõ èíäèâèäóàëüíîãî çàòðóäíåíèÿ â ïðîáíîì äåéñòâèè.",
+	"Îðãàíèçîâàòü àíàëèç îáó÷àþùèìèñÿ âîçíèêøåé ñèòóàöèè è íà ýòîé îñíîâå âûÿâëåíèå ìåñòà è ïðè÷èíû \nçàòðóäíåíèÿ îñîçíàíèå òîãî, â ÷åì èìåííî ñîñòîèò íåäîñòàòî÷íîñòü èõ çíàíèé, óìåíèé èëè ñïîñîáíîñòåé.",
+	"Ñïîñîáñòâîâàòü ïîñòàíîâêå öåëåé ó÷åáíîé äåÿòåëüíîñòè è íà ýòîé îñíîâå - âûáîð ñïîñîáà è ñðåäñòâ èõ \nðåàëèçàöèè.",
+	"Îðãàíèçîâàòü ïîñòðîåíèå îáó÷àþùèìèñÿ íîâîãî ñïîñîáà äåéñòâèé è ôîðìèðîâàíèå óìåíèé åãî ïðèìåíÿòü êàê \nïðè ðåøåíèè çàäà÷è, âûçâàâøåé çàòðóäíåíèå, òàê è ïðè ðåøåíèè çàäà÷ òàêîãî êëàññà èëè òèïà âîîáùå.",
+	"Îðãàíèçîâàòü óñâîåíèå îáó÷àþùèìèñÿ íîâîãî ñïîñîáà äåéñòâèÿ ïðè ðåøåíèè òèïîâûõ çàäà÷.",
+	"Ñïîñîáñòâîâàòü èíòåðèîðèçàöèè íîâîãî ñïîñîáà äåéñòâèÿ è èñïîëíèòåëüñêàÿ ðåôëåêñèÿ (êîëëåêòèâíàÿ è \nèíäèâèäóàëüíàÿ) äîñòèæåíèÿ öåëè ïðîáíîãî ó÷åáíîãî äåéñòâèÿ, ïðèìåíåíèå íîâîãî çíàíèå â òèïîâûõ çàäàíèÿõ.",
+	"Ïîâò. è çàêðåïèòü ðàíåå èçó÷. è ïîäã. ê èçó÷åíèþ ñëåä. ðàçä. êóðñà, âûÿâèòü ãðàíèöû ïðèìåíèì. íîâîãî çí. è \níàó÷èòü èñï. åãî â ñèñò. èçó÷. ðàíåå çíàíèé, ïîâò. ó÷åáíîå ñîäåðæàíèå, íåîáõ. äëÿ îáåñïå÷åíèÿ ñîäåðæàòåëüíîé \níåïðåðûâíîñòè, ñïîñîáñòâîâàòü âêëþ÷åíèþ íîâîãî ñïîñîáà äåéñòâèé â ñèñòåìó çíàíèé.",
+	"Îðãàíèçîâàòü ñàìîîöåíêó îáó÷àþùèìèñÿ ðåçóëüòàòîâ ñâîåé ó÷åáíîé äåÿòåëüíîñòè, îñîçíàíèå ìåòîäà \nïîñòðîåíèÿ è ãðàíèö ïðèìåíåíèÿ íîâîãî ñïîñîáà äåéñòâèÿ."
+	,""};
+	std::vector<std::string> str2{
+	"Âûðàáîòàòü íà \nëè÷íîñòíî \nçíà÷èìîì \nóðîâíå âíóòðåííåé \nãîòîâíîñòè \nâûïîëíåíèÿ \níîðìàòèâíûõ \nòðåáîâàíèé \nó÷åáíîé \näåÿòåëüíîñòè.",
+	"Ïîäãîòîâèòü \nìûøëåíèå ó÷àùèõñÿ \nè îðãàíèçàöèÿ \nîñîçíàíèÿ èìè \nâíóòðåííåé \nïîòðåáíîñòè \nê ïîñòðîåíèþ \nó÷åáíûõ äåéñòâèé \nîðãàíèçîâàòü \nôèêñèðîâàíèå \nêàæäûì èç íèõ \nèíäèâèäóàëüíîãî \nçàòðóäíåíèÿ â \nïðîáíîì äåéñòâèè.",
+	"Îðãàíèçîâàòü àíàëèç \nîáó÷àþùèìèñÿ \nâîçíèêøåé ñèòóàöèè \nè íà ýòîé îñíîâå \nâûÿâëåíèå ìåñòà \nè ïðè÷èíû \nçàòðóäíåíèÿ \nîñîçíàíèå \nòîãî, â ÷åì \nèìåííî ñîñòîèò \níåäîñòàòî÷íîñòü èõ \nçíàíèé, \nóìåíèé èëè \nñïîñîáíîñòåé.",
+	"Ñïîñîáñòâîâàòü \nïîñòàíîâêå öåëåé \nó÷åáíîé \näåÿòåëüíîñòè \nè íà ýòîé îñíîâå \n- âûáîð ñïîñîáà \nè ñðåäñòâ èõ \nðåàëèçàöèè.",
+	"Îðãàíèçîâàòü \nïîñòðîåíèå \nîáó÷àþùèìèñÿ \níîâîãî \nñïîñîáà äåéñòâèé \nè ôîðìèðîâàíèå \nóìåíèé \nåãî ïðèìåíÿòü êàê \nïðè ðåøåíèè çàäà÷è, \nâûçâàâøåé \nçàòðóäíåíèå, \nòàê è ïðè ðåøåíèè \nçàäà÷ òàêîãî \nêëàññà èëè \nòèïà âîîáùå.",
+	"Îðãàíèçîâàòü \nóñâîåíèå \nîáó÷àþùèìèñÿ \níîâîãî ñïîñîáà \näåéñòâèÿ ïðè \nðåøåíèè òèïîâûõ \nçàäà÷.",
+	"Ñïîñîáñòâîâàòü \nèíòåðèîðèçàöèè \níîâîãî ñïîñîáà \näåéñòâèÿ è \nèñïîëíèòåëüñêàÿ \nðåôëåêñèÿ \n(êîëëåêòèâíàÿ è \nèíäèâèäóàëüíàÿ) \näîñòèæåíèÿ öåëè \nïðîáíîãî ó÷åáíîãî \näåéñòâèÿ, \nïðèìåíåíèå \níîâîãî çíàíèå \nâ òèïîâûõ çàäàíèÿõ.",
+	"Ïîâò. è çàêðåïèòü \nðàíåå èçó÷. è ïîäã. \nê èçó÷åíèþ ñëåä. \nðàçä. êóðñà, \nâûÿâèòü ãðàíèöû \nïðèìåíèì. íîâîãî \nçí. è íàó÷èòü èñï. \nåãî â ñèñò. èçó÷. \nðàíåå çíàíèé, ïîâò. \nó÷åáíîå \nñîäåðæàíèå, \níåîáõ. äëÿ \nîáåñïå÷åíèÿ \nñîäåðæàòåëüíîé \níåïðåðûâíîñòè, \nñïîñîáñòâîâàòü \nâêëþ÷åíèþ íîâîãî \nñïîñîáà äåéñòâèé \nâ ñèñòåìó çíàíèé.",
+	"Îðãàíèçîâàòü \nñàìîîöåíêó \nîáó÷àþùèìèñÿ \nðåçóëüòàòîâ ñâîåé \nó÷åáíîé \näåÿòåëüíîñòè, \nîñîçíàíèå ìåòîäà \nïîñòðîåíèÿ è ãðàíèö \nïðèìåíåíèÿ íîâîãî \nñïîñîáà äåéñòâèÿ."
+	,""};
+	
+    for (int i = 0; i < numRows; ++i)
+    {
+        for (int j = 0; j < numCols; ++j)
+        {
+            cells[i][j].setSize(sf::Vector2f(cellWidth, cellHeight*(i+1)));
+            cells[i][j].setPosition(10 + j * cellWidth, 80 + i * cellHeight);
+            if(i == 0 ){
+             cells[i][j].setSize(sf::Vector2f(cellWidth, cellHeight*(i+0.8)));	
+			}
+			            if(i == 1 ){
+            cells[i][j].setPosition(10 + j * cellWidth, 80 + i * cellHeight-33);
+			}
+            cells[i][j].setOutlineColor(sf::Color::Black);
+            cells[i][j].setOutlineThickness(1.f);
+			cells[i][j].setFillColor(Color::Transparent);
+            text[i][j].setFont(font);
+            if(i == 0 ){
+			text[i][j].setString(str[j]);
+			}
+            text[i][j].setCharacterSize(12);
+            text[i][j].setFillColor(Color::Black);
+            text[i][j].setPosition(cells[i][j].getPosition().x + 5, cells[i][j].getPosition().y + 5);
+            
+        }
+    }
+shuffle_two_arrays(str1, str2,heh);
+
+	CircleShape circle(15);
+	circle.setOutlineColor(Color::Black);
+	circle.setOutlineThickness(2);
+	circle.setPosition(230,720); 
+	circle.setFillColor(Color::White);
+//////
+////// Ýêðàí òåñòà Âòîðîé Øàã
+	float scrollSpeed = 60.0f;
+	Text kallla("Óðîâåíü 3: Øàã 2. Âûáåðèòå çàäà÷ó, ñîîòâåòñòâóþùóþ êàæäîìó èç ýòàïîâ.",font,20);
+    kallla.setPosition(170,20);
+    kallla.setFillColor(Color::Black);
+    
+    String Atap[10]{
+	"1.	Ýòàï ìîòèâàöèè (ñàìîîïðåäåëåíèÿ) ê ó÷åáíîé äåÿòåëüíîñòè.",
+	"2.	Ýòàï àêòóàëèçàöèÿ è ôèêñèðîâàíèå èíäèâèäóàëüíîãî çàòðóäíåíèÿ â ïðîáíîì äåéñòâèè.",
+	"3. Ýòàï âûÿâëåíèÿ ìåñòà è ïðè÷èíû çàòðóäíåíèÿ.",
+	"4.	Ýòàï ïîñòðîåíèÿ ïðîåêòà âûõîäà èç çàòðóäíåíèÿ.",
+	"5.	Ýòàï ðåàëèçàöèè ïîñòðîåííîãî ïðîåêòà.",
+	"6. Ýòàï ïåðâè÷íîãî çàêðåïëåíèÿ ñ ïðîãîâàðèâàíèåì âî âíåøíåé ðå÷è.",
+	"7.	Ýòàï ñàìîñòîÿòåëüíîé ðàáîòû ñ ñàìîïðîâåðêîé ïî ýòàëîí",
+	"8. Ýòàï âêëþ÷åíèÿ â ñèñòåìó çíàíèé è ïîâòîðåíèÿ.",
+	"9. Ýòàï ðåôëåêñèè ó÷åáíîé äåÿòåëüíîñòè íà óðîêå."	
+	};
+	
+	Text atapi[10];
+    for (int i = 0; i < 10; ++i) {
+        atapi[i].setFont(font);
+        atapi[i].setString(Atap[i]);
+        atapi[i].setCharacterSize(20);
+        atapi[i].setFillColor(sf::Color::Black);
+        atapi[i].setPosition(90, 70 + (220 * (i / 9)) + (220 * (i % 9)));
+    }
+	
+	RectangleShape vopros[9];
+    	for (int i = 0; i < 9; ++i) {
+        vopros[i].setSize(sf::Vector2f(750, 40));
+        vopros[i].setPosition(80, 60 + (220 * i));
+        vopros[i].setOutlineColor(Color::Black);
+        vopros[i].setOutlineThickness(3);
+        vopros[i].setFillColor(Color::White);
+    }
+	
+	String otvetikTest[28]{
+	"Âûðàáîòàòü íà ëè÷íîñòíî çíà÷èìîì óðîâíå âíóòðåííåé ãîòîâíîñòè âûïîëíåíèÿ íîðìàòèâíûõ òðåáîâàíèé ó÷åáíîé äåÿòåëüíîñòè.",
+	"Âûðàáîòàòü íà ëè÷íîñòíî çíà÷èìîì óðîâíå âíóòðåííåé ãîòîâíîñòè ê ðåàëèçàöèè íîðìàòèâíûõ òðåáîâàíèé êîððåêöèîííîé äåÿòåëüíîñòè.",
+	"Âûðàáîòàòü íà ëè÷íîñòíî çíà÷èìîì óðîâíå âíóòðåííåé ãîòîâíîñòè ê ðåàëèçàöèè íîðìàòèâíûõ òðåáîâàíèé êîíòðîëüíî-êîððåêöèîííîé äåÿòåëüíîñòè.",
+	"Ïîäãîòîâèòü ìûøëåíèå ó÷àùèõñÿ è îðãàíèçàöèÿ îñîçíàíèÿ èìè âíóòðåííåé ïîòðåáíîñòè ê ïîñòðîåíèþ ó÷åáíûõ äåéñòâèé îðãàíèçîâàòü ôèêñèðîâàíèå êàæäûì \nèç íèõ èíäèâèäóàëüíîãî çàòðóäíåíèÿ â ïðîáíîì äåéñòâèè.",
+	"Ïîäãîòîâèòü ìûøëåíèå îáó÷àþùèõñÿ è îñîçíàíèå èìè ïîòðåáíîñòè ê âûÿâëåíèþ ïðè÷èí çàòðóäíåíèé â ñîáñòâåííîé äåÿòåëüíîñòè.",
+	"Ïîäãîòîâèòü ìûøëåíèå îáó÷àþùèõñÿ è îñîçíàíèå èìè ïîòðåáíîñòè â êîíòðîëå è ñàìîêîíòðîëå ðåçóëüòàòà è âûÿâëåíèè ïðè÷èí çàòðóäíåíèé â äåÿòåëüíîñòè.",
+	"Îðãàíèçîâàòü  àíàëèç îáó÷àþùèìèñÿ âîçíèêøåé ñèòóàöèè è íà ýòîé îñíîâå âûÿâëåíèå ìåñòà è ïðè÷èíû çàòðóäíåíèÿ îñîçíàíèå òîãî, â ÷åì èìåííî ñîñòîèò \níåäîñòàòî÷íîñòü èõ çíàíèé, óìåíèé èëè ñïîñîáíîñòåé.",
+	"Îðãàíèçîâàòü îñîçíàíèå ìåñòà è ïðè÷èíû ñîáñòâåííûõ çàòðóäíåíèé â âûïîëíåíèè èçó÷åííûõ ñïîñîáîâ äåéñòâèé.",
+	"Âûðàáîòàòü íà ëè÷íîñòíî çíà÷èìîì óðîâíå âíóòðåííåé ãîòîâíîñòè ê êîððåêöèîííîé ðàáîòå, à òàêæå âûÿâëåíèå ìåñòà è ïðè÷èíû ñîáñòâåííûõ \nçàòðóäíåíèé â âûïîëíåíèè êîíòðîëüíîé ðàáîòû.",
+	"Ñïîñîáñòâîâàòü ïîñòàíîâêå öåëåé ó÷åáíîé äåÿòåëüíîñòè è íà ýòîé îñíîâå - âûáîð ñïîñîáà è ñðåäñòâ èõ ðåàëèçàöèè.",
+	"Ñïîñîáñòâîâàòü ïîñòàíîâêå öåëåé êîððåêöèîííîé äåÿòåëüíîñòè è íà ýòîé îñíîâå - âûáîð ñïîñîáà è ñðåäñòâ èõ ðåàëèçàöèè.",
+	"Ñïîñîáñòâîâàòü ïîñòàíîâêå öåëåé êîððåêöèîííîé äåÿòåëüíîñòè è íà ýòîé îñíîâå - âûáîð ñïîñîáà è ñðåäñòâ åå ðåàëèçàöèè.",
+	"Îðãàíèçîâàòü ïîñòðîåíèå îáó÷àþùèìèñÿ íîâîãî ñïîñîáà äåéñòâèé è ôîðìèðîâàíèå óìåíèé åãî ïðèìåíÿòü êàê ïðè ðåøåíèè çàäà÷è, âûçâàâøåé çàòðóäíåíèå, \nòàê è ïðè ðåøåíèè çàäà÷ òàêîãî êëàññà èëè òèïà âîîáùå.",
+	"Ñïîñîáñòâîâàòü îñìûñëåííîé êîððåêöèè îáó÷àþùèìèñÿ ñâîèõ îøèáîê â ñàìîñòîÿòåëüíîé ðàáîòå è ôîðìèðîâàòü óìåíèÿ ïðàâèëüíî ïðèìåíÿòü ñîîòâåòñòâóþùèå \nñïîñîáû äåéñòâèé.",
+	"Îðãàíèçîâàòü êîððåêöèþ îáó÷àþùèìèñÿ ñâîèõ îøèáîê â êîíòðîëüíîé ðàáîòå è ôîðìèðîâàòü óìåíèÿ ïðàâèëüíî ïðèìåíÿòü ñîîòâåòñòâóþùèå ñïîñîáû äåéñòâèé.",
+	"Îðãàíèçîâàòü óñâîåíèå îáó÷àþùèìèñÿ íîâîãî ñïîñîáà äåéñòâèÿ ïðè ðåøåíèè òèïîâûõ çàäà÷.",
+	"Çàêðåïèòü ñïîñîáû äåéñòâèé, âûçâàâøèõ çàòðóäíåíèÿ.",
+	"",
+	"Ñïîñîáñòâîâàòü èíòåðèîðèçàöèè íîâîãî ñïîñîáà äåéñòâèÿ è èñïîëíèòåëüñêàÿ ðåôëåêñèÿ (êîëëåêòèâíàÿ è èíäèâèäóàëüíàÿ) äîñòèæåíèÿ öåëè ïðîáíîãî ó÷åáíîãî \näåéñòâèÿ, ïðèìåíåíèå íîâîãî çíàíèå â òèïîâûõ çàäàíèÿõ.",
+	"Ñïîñîáñòâîâàòü èíòåðèîðèçàöèè ñïîñîáîâ äåéñòâèé, âûçâàâøèõ çàòðóäíåíèÿ, ñàìîïðîâåðêà èõ óñâîåíèÿ èíäèâèäóàëüíàÿ ðåôëåêñèÿ äîñòèæåíèÿ öåëè \nè ñîçäàíèå (ïî âîçìîæíîñòè) ñèòóàöèè óñïåõà.",
+	"",
+	"Ïîâòîðèòü è çàêðåïèòü ðàíåå èçó÷åííîãî è ïîäãîòîâèòüñÿ ê èçó÷åíèþ ñëåäóþùèõ ðàçäåëîâ êóðñà, âûÿâèòü ãðàíèöû ïðèìåíèìîñòè íîâîãî çíàíèÿ \nè íàó÷èòü èñïîëüçîâàòü.",
+	"Åãî â ñèñòåìå èçó÷åííûõ ðàíåå çíàíèé, ïîâòîðèòü ó÷åáíîå ñîäåðæàíèå, íåîáõîäèìîå äëÿ îáåñïå÷åíèÿ ñîäåðæàòåëüíîé íåïðåðûâíîñòè, \nñïîñîáñòâîâàòü âêëþ÷åíèþ íîâîãî ñïîñîáà äåéñòâèé â ñèñòåìó çíàíèé.",
+	"Ïðèìåíèòü ñïîñîáû äåéñòâèé, âûçâàâøèõ çàòðóäíåíèÿ, ïîâòîðèòü è çàêðåïèòü ðàíåå èçó÷åííîãî è ïîäãîòîâèòüñÿ ê èçó÷åíèþ ñëåäóþùèõ ðàçäåëîâ \nêóðñà ïîâòîðèòü è çàêðåïèòü ðàíåå èçó÷åíî, ïîäãîòîâèòüñÿ ê èçó÷åíèþ ñëåäóþùèõ ðàçäåëîâ êóðñà.",
+	"Îðãàíèçîâàòü ñàìîîöåíêó îáó÷àþùèìèñÿ ðåçóëüòàòîâ ñâîåé ó÷åáíîé äåÿòåëüíîñòè, îñîçíàíèå ìåòîäà ïîñòðîåíèÿ è ãðàíèö ïðèìåíåíèÿ íîâîãî ñïîñîáà äåéñòâèÿ.",
+	"Îðãàíèçîâàòü îñîçíàíèå îáó÷àþùèìèñÿ ìåòîäà ïðåîäîëåíèÿ çàòðóäíåíèé è ñàìîîöåíêó èìè ðåçóëüòàòîâ ñâîåé êîððåêöèîííîé (à â ñëó÷àå, åñëè îøèáîê \níå áûëî, ñàìîñòîÿòåëüíîé) äåÿòåëüíîñòè.",
+	"Îðãàíèçîâàòü ñàìîîöåíêó ðåçóëüòàòîâ êîíòðîëüíî-êîððåêöèîííîé äåÿòåëüíîñòè, îñîçíàíèå ìåòîäà ïðåîäîëåíèÿ çàòðóäíåíèé â äåÿòåëüíîñòè è ìåõàíèçìà \nêîíòðîëüíî-êîððåêöèîííîé äåÿòåëüíîñòè."
+	};
+	
+	Text oT[28];
+    for (int i = 0; i < 28; ++i) {
+        oT[i].setFont(font);
+        oT[i].setString(otvetikTest[i]);
+        oT[i].setCharacterSize(15);
+        oT[i].setFillColor(Color::Black);
+        oT[i].setPosition(40, 20 + (220 * (i / 3)) + (55 * (i % 3)) + 100); // Ðàñïîëîæåíèå îòâåòîâ ïîä ðåêòàíãëàìè
+    }
+    Texture gal;
+    gal.loadFromFile("Gal.png");
+    Sprite clickSprite[28];
+        for (int i = 0; i < 28; ++i) {
+clickSprite[i].setTexture(gal);
+clickSprite[i].setPosition(0,-500);
+clickSprite[i].setScale(0.2,0.2);
+    }
+	int currentStage = 0; // Òåêóùèé ýòàï (íà÷èíàåì ñ 0)
+    vector<int> selectedAnswers; 	
+//////
+
+ Vector2f offset(30, 0); // Adjust as needed
+
+	while (window.isOpen()) {
+        Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+                exit(0);
+            }
+            if (Keyboard::isKeyPressed(Keyboard::Space)) {
+                vhod = false;
+                test = true;
+            }
+            if(povtor.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)){
+            randomIndex = 0;
+            for (int i = 1; i <= 9; ++i) {
+      		texts[i].setString("");
+			  zighail = 0;  
+    }
+    shuffle_two_arrays(str1, str2,heh);
+}   
+			if(knopP.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)){
+            randomIndex = 0;
+            for (int i = 1; i <= 9; ++i) {
+      		texts[i].setString("");
+			zighail = 0;  
+    }
+    shuffle_two_arrays(str1, str2,heh);
+} 
+			
+			if (event.type == sf::Event::MouseMoved) {
+                if (krest.getGlobalBounds().contains(sf::Vector2f(event.mouseMove.x, event.mouseMove.y))) {
+                    krest.setFillColor(sf::Color::Red);
+                } else {
+                    krest.setFillColor(sf::Color::White);
+                }
+            }
+            
+                         if (event.type == Event::MouseWheelScrolled)
+        {
+            if (event.mouseWheelScroll.delta > 0)
+                view.move(0, -scrollSpeed);
+            else if (event.mouseWheelScroll.delta < 0)
+                view.move(0, scrollSpeed);
+            if (view.getCenter().y <= 0 + 350)
+    {
+        view.setCenter(view.getCenter().x, 0 + 350);
+    }
+    else if (view.getCenter().y >= 2000 - 300)
+    {
+        view.setCenter(view.getCenter().x, 2000 - 300);
+    }
+        }
+
+            if (event.type == Event::MouseButtonPressed) {			
+			if(vpered.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)){
+            test = false;
+			test1 = true; 
+    }
+    		if(knopV.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)){
+            test = false;
+			test1 = true; 
+    }
+    		if (krest.getGlobalBounds().contains(sf::Vector2f(event.mouseButton.x, event.mouseButton.y)) && okno == true) {
+                        okno = false;
+    }
+    
+    
+            if (event.type == Event::MouseButtonPressed) {
+                if (event.mouseButton.button == Mouse::Left) {
+                    Vector2f mousePos = window.mapPixelToCoords(Vector2i(event.mouseButton.x, event.mouseButton.y));
+                    // Ïðîâåðêà íà íàæàòèå íà îòâåò
+                    for (int i = 0; i < 28; ++i) {
+			createSpriteOnClick(window,oT[i], clickSprite[i], offset, view);
+                    }
+                }
+            }
+    
+    
+         	klick(rectangle,event,texts[heh[randomIndex]],str2,0,randomIndex,str1,otv,dev[zighail],zighail,heh,islam[zighail],okno);
+            klick(rectangle1,event,texts[heh[randomIndex]],str2,1,randomIndex,str1,otv,dev[zighail],zighail,heh,islam[zighail],okno);
+            klick(rectangle2,event,texts[heh[randomIndex]],str2,2,randomIndex,str1,otv,dev[zighail],zighail,heh,islam[zighail],okno);
+            klick(rectangle3,event,texts[heh[randomIndex]],str2,3,randomIndex,str1,otv,dev[zighail],zighail,heh,islam[zighail],okno);
+            klick(rectangle4,event,texts[heh[randomIndex]],str2,4,randomIndex,str1,otv,dev[zighail],zighail,heh,islam[zighail],okno);
+            klick(rectangle5,event,texts[heh[randomIndex]],str2,5,randomIndex,str1,otv,dev[zighail],zighail,heh,islam[zighail],okno);
+            klick(rectangle6,event,texts[heh[randomIndex]],str2,6,randomIndex,str1,otv,dev[zighail],zighail,heh,islam[zighail],okno);
+            klick(rectangle7,event,texts[heh[randomIndex]],str2,7,randomIndex,str1,otv,dev[zighail],zighail,heh,islam[zighail],okno);
+            klick(rectangle8,event,texts[heh[randomIndex]],str2,8,randomIndex,str1,otv,dev[zighail],zighail,heh,islam[zighail],okno);
+			
+//			handleEvents(window, view, scrollSpeed,event);
+}
+			
+	
+}
+        if(vhod){
+        	window.clear(Color::White);
+        	window.draw(testik);
+		}
+        if(test){
+        	window.clear(Color::White);
+//		 window.draw(akran);          
+		 for (int i = 0; i < numRows; ++i)
+        {
+            for (int j = 0; j < numCols; ++j)
+            {
+                window.draw(cells[i][j]);
+                window.draw(text[i][j]);
+            }
+        }
+        otv.setString(str1[randomIndex]);
+		window.draw(rectangle);
+		window.draw(rectangle1);
+		window.draw(rectangle2);
+		window.draw(rectangle3);
+		window.draw(rectangle4);
+		window.draw(rectangle5);
+		window.draw(rectangle6);
+		window.draw(rectangle7);
+		window.draw(rectangle8);
+		window.draw(zagolovok);
+		window.draw(povtor);
+		window.draw(otveti);
+		window.draw(otv);
+		window.draw(vpered);
+		window.draw(shag);
+		window.draw(shag1);
+		window.draw(pim);
+		window.draw(pimos);
+	for(int i = 0; i < 9; i++){
+    circle.setPosition(230+(51*(i+1)),720);
+    if(i >= zighail){
+        circle.setFillColor(Color::White);    
+    } else {
+        if(dev[i] == true){
+            circle.setFillColor(Color::Green);    
+        } else {
+            circle.setFillColor(Color::Red);    
+        }
+    }
+    window.draw(circle);
+}	
+	for(int i = 1;i <=9; i++){
+	
+window.draw(texts[i]);
+	}
+	if (zighail == 9 && okno == true){
+		window.draw(akno);
+		window.draw(okn);
+		window.draw(knopV);
+		window.draw(knopP);
+		window.draw(krest);
+		window.draw(krestik);
+	}
+		}
+		if(test1){
+		window.clear(Color::White);
+		render(window, view);
+		window.draw(kallla);	
+		for (int i = 0; i < 9; ++i) {
+            
+                window.draw(vopros[i]);
+                window.draw(atapi[i]);
+            
+        }
+
+        for (int i = 0; i < 28; ++i) {
+                window.draw(clickSprite[i]);   
+    }
+        		for (int i = 0; i < 28; ++i) {
+        			
+                window.draw(oT[i]);   
+        }
+        
+		}
+	
+        window.display();
+    }
+	return 0 ;
+}
